@@ -7,13 +7,17 @@ import (
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/input"
-	"github.com/go-rod/rod/lib/launcher"
+	//"github.com/go-rod/rod/lib/launcher"
 )
 
 func main() {
-	chromePath := "/usr/bin/google-chrome"
+	//launcher.Set(log.Printf)
+
+	// Launch a new browser with default options
 	log.Println("Launching browser...")
-	browser := rod.New().ControlURL(launcher.New().Bin(chromePath).Headless(true).MustLaunch()).MustConnect()
+	//chromePath := "/usr/bin/google-chrome" //hardcode because rod cant start chrome :D
+	log.Println("Launching browser...")
+	browser := rod.New().ControlURL("http://localhost:3000").MustConnect()
 	defer browser.MustClose()
 
 	page := browser.MustPage("http://localhost:3000")
@@ -21,7 +25,7 @@ func main() {
 	page.MustWaitLoad()
 	log.Println("waiting..")
 	// if needed, this will scroll to the button (added in case some changes will be added to the UI)
-	page.MustElement("#rekor-search-attribute").MustScrollIntoView()
+	//page.MustElement("#rekor-search-attribute").MustScrollIntoView()
 	log.Println("scrolling...")
 	// will click on the rolldown button
 	page.MustElement("#rekor-search-attribute").MustClick()
