@@ -16,8 +16,8 @@ type G struct {
 
 var setup = func() func(t *testing.T) G {
 	return func(t *testing.T) G {
-		browser := rod.New().Headless(false).MustConnect() // create a new browser instance for each test
-		t.Parallel()                                       // run each test concurrently
+		browser := rod.New().MustConnect() // create a new browser instance for each test
+		t.Parallel()                       // run each test concurrently
 		return G{got.New(t), browser}
 	}
 }
@@ -42,24 +42,26 @@ func TestEmail(t *testing.T) {
 	fmt.Println("came here1")
 	p := g.page(appURL)
 	fmt.Println("came here2")
-	// ensure the element is ready before interacting with it
+	//ensure the element is ready before interacting with it
 	attrElement := p.MustElement("#rekor-search-attribute")
 	attrElement.MustWaitVisible().MustClick()
 
 	fmt.Println("came here3")
+	// Use MustSelect to interact with <select> dropdowns
+	attrElement.MustElementR("option", "Email")
+	attrElement.MustClick()
 
 	//select the "email" option from the dropdown
-	// emailOption := p.MustElementR("option", "Email")
-	// emailOption.MustWaitVisible().MustClick()
-	// fmt.Println("Finding 'Email' option")
-	emailOption := p.MustElementR("option", "Email")
 
-	fmt.Println("'Email' option found")
-	emailOption.MustWaitVisible()
-	fmt.Println("'Email' option is visible")
-	emailOption.MustClick()
-	fmt.Println("'Email' option clicked")
-	fmt.Println("came here4")
+	// emailOption := p.MustElementR("option", "Email")
+	// fmt.Println("'Email' option found")
+	// emailOption.MustWaitVisible()
+	// fmt.Println("'Email' option is visible")
+	// emailOption.MustWaitStable()
+	// fmt.Println("'Email' option is stable")
+	// emailOption.MustClick()
+	// fmt.Println("'Email' option clicked")
+	// fmt.Println("came here4")
 
 	// fill the text field with the email "jdoe@redhat.com"
 	emailInput := p.MustElement("#rekor-search-email")
@@ -73,4 +75,5 @@ func TestEmail(t *testing.T) {
 
 	searchButton := p.MustElement("search-form-button")
 	searchButton.MustClick()
+
 }
