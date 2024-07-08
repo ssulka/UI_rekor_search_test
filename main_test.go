@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-rod/rod"
@@ -14,19 +15,21 @@ type G struct {
 }
 
 var setup = func() func(t *testing.T) G {
-	browser := rod.New().MustConnect()
-
 	return func(t *testing.T) G {
-		t.Parallel() // run each test concurrently
-
+		browser := rod.New().MustConnect() // Create a new browser instance for each test
+		t.Parallel()                       // run each test concurrently
 		return G{got.New(t), browser}
 	}
-}()
+}
 
 // a helper function to create an incognito page.
 func (g G) page(url string) *rod.Page {
 	page := g.browser.MustIncognito().MustPage(url)
-	g.Cleanup(page.MustClose)
+	g.Cleanup(func() {
+		if err := page.Close(); err != nil {
+			g.Logf("Failed to close page: %v", err)
+		}
+	})
 	return page
 }
 
@@ -34,19 +37,28 @@ const appURL = "http://localhost:3000"
 
 // test for email
 func TestEmail(t *testing.T) {
-	g := setup(t)
-
+	fmt.Println("came here0")
+	g := setup()(t) // Invoke setup to get a new instance of G for this test
+	fmt.Println("came here1")
 	p := g.page(appURL)
-
-	p.MustElement("#rekor-search-attribute").MustClick()
+	fmt.Println("came here2")
+	// Ensure the element is ready before interacting with it
+	attrElement := p.MustElement("#rekor-search-attribute")
+	attrElement.MustWaitVisible().MustClick()
+	fmt.Println("came here3")
 
 	// Select the "email" option from the dropdown
-	p.MustElementR("option", "email").MustClick()
+	emailOption := p.MustElementR("option", "Email")
+	emailOption.MustWaitVisible().MustClick()
+	fmt.Println("came here4")
 
 	// Fill the text field with the email "jdoe@redhat.com"
-	p.MustElement("#rekor-search-email").MustInput("jdoe@redhat.com")
+	emailInput := p.MustElement("#rekor-search-email")
+	emailInput.MustWaitVisible().MustInput("jdoe@redhat.com")
+	fmt.Println("came here5")
 
 	// Verify the input value
-	g.Eq(p.MustElement("##rekor-search-email").MustProperty("value").String(), "jdoe@redhat.com")
-
+	inputValue := emailInput.MustProperty("value").String()
+	g.Eq(inputValue, "jdoe@redhat.com")
+	fmt.Println("came here6")
 }
