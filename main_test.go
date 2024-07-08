@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 	"github.com/ysmood/got"
 )
 
@@ -16,8 +17,10 @@ type G struct {
 
 var setup = func() func(t *testing.T) G {
 	return func(t *testing.T) G {
-		browser := rod.New().MustConnect() // create a new browser instance for each test
-		t.Parallel()                       // run each test concurrently
+		launch := launcher.New().Headless(false)
+		url := launch.MustLaunch()
+		browser := rod.New().ControlURL(url).MustConnect() // create a new browser instance for each test
+		t.Parallel()                                       // run each test concurrently
 		return G{got.New(t), browser}
 	}
 }
@@ -53,16 +56,6 @@ func TestEmail(t *testing.T) {
 
 	//select the "email" option from the dropdown
 
-	// emailOption := p.MustElementR("option", "Email")
-	// fmt.Println("'Email' option found")
-	// emailOption.MustWaitVisible()
-	// fmt.Println("'Email' option is visible")
-	// emailOption.MustWaitStable()
-	// fmt.Println("'Email' option is stable")
-	// emailOption.MustClick()
-	// fmt.Println("'Email' option clicked")
-	// fmt.Println("came here4")
-
 	// fill the text field with the email "jdoe@redhat.com"
 	emailInput := p.MustElement("#rekor-search-email")
 	emailInput.MustWaitVisible().MustInput("jdoe@redhat.com")
@@ -73,7 +66,7 @@ func TestEmail(t *testing.T) {
 	g.Eq(inputValue, "jdoe@redhat.com")
 	fmt.Println("came here6")
 
-	searchButton := p.MustElement("search-form-button")
+	searchButton := p.MustElement("#search-form-button")
 	searchButton.MustClick()
 
 }
