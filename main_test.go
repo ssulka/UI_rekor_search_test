@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
@@ -44,6 +45,7 @@ func TestEmail(t *testing.T) {
 	g := setup()(t) // invoke setup to get a new instance of G for this test
 	fmt.Println("came here1")
 	p := g.page(appURL)
+	defer p.Close()
 	fmt.Println("came here2")
 	//ensure the element is ready before interacting with it
 	attrElement := p.MustElement("#rekor-search-attribute")
@@ -68,5 +70,7 @@ func TestEmail(t *testing.T) {
 
 	searchButton := p.MustElement("#search-form-button")
 	searchButton.MustClick()
+	content := p.MustElementR("class", "pf-v5-c-card")
+	content.Timeout(5 * time.Second).MustWait("pf-v5-c-card")
 
 }
