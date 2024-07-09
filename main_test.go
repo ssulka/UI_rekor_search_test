@@ -25,7 +25,7 @@ var setup = func() func(t *testing.T) G {
 	}
 }
 
-// a helper function to create an incognito page.
+// a helper function to create page
 func (g G) page(url string) *rod.Page {
 	page := g.browser.MustPage(url)
 	g.Cleanup(func() {
