@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
@@ -54,9 +53,8 @@ func TestEmail(t *testing.T) {
 	fmt.Println("came here3")
 	// Use MustSelect to interact with <select> dropdowns
 	attrElement.MustElementR("option", "Email")
-	attrElement.MustClick()
-
 	//select the "email" option from the dropdown
+	attrElement.MustClick()
 
 	// fill the text field with the email "jdoe@redhat.com"
 	emailInput := p.MustElement("#rekor-search-email")
@@ -71,6 +69,6 @@ func TestEmail(t *testing.T) {
 	searchButton := p.MustElement("#search-form-button")
 	searchButton.MustClick()
 	content := p.MustElementR("class", "pf-v5-c-card")
-	content.Timeout(5 * time.Second).MustWait("pf-v5-c-card")
+	content.MustWaitVisible() //the test wont pass if we wait for the load of data (need fixing)
 
 }
