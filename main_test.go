@@ -50,7 +50,6 @@ func TestEmail(t *testing.T) {
 	attrElement.MustWaitVisible().MustClick()
 
 	fmt.Println("came here3")
-	// Use MustSelect to interact with <select> dropdowns
 	attrElement.MustElementR("option", "Email")
 	//select the "email" option from the dropdown
 	attrElement.MustClick()
