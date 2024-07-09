@@ -36,7 +36,7 @@ func (g G) page(url string) *rod.Page {
 	return page
 }
 
-const appURL = "http://localhost:3000" //will be replaced by URL from ocp
+const appURL = "http://localhost:3000" //will be replaced by URL from ocp, testing on localhost for now
 
 // test for email
 func TestEmail(t *testing.T) {
