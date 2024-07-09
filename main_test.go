@@ -58,7 +58,7 @@ func TestEmail(t *testing.T) {
 
 	// fill the text field with the email "jdoe@redhat.com"
 	emailInput := p.MustElement("#rekor-search-email")
-	emailInput.MustWaitVisible().MustInput("jdoe@redhat.com")
+	emailInput.MustWaitVisible().MustInput("jdoe@redhat.com") //will be replaced with actual email used for signing
 	fmt.Println("came here5")
 
 	// verify the input value
